@@ -33,4 +33,18 @@ defmodule SocketythingWeb.PresenceChannel do
 
     {:noreply, socket}
   end
+
+  @impl true
+  def handle_in("cursor", %{"x" => x, "y" => y}, socket)
+      when is_number(x) and is_number(y) and
+             x > 0 and x < 1 and
+             y > 0 and y < 1 do
+    broadcast_from!(socket, "cursor", %{viewer_id: socket.assigns.viewer_id, x: x, y: y})
+
+    {:noreply, socket}
+  end
+
+  def handle_in("cursor", _payload, socket) do
+    {:reply, {:error, %{reason: "invalid payload"}}, socket}
+  end
 end
