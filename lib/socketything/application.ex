@@ -11,6 +11,7 @@ defmodule Socketything.Application do
       SocketythingWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:socketything, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Socketything.PubSub},
+      SocketythingWeb.Presence,
       # Start a worker by calling: Socketything.Worker.start_link(arg)
       # {Socketything.Worker, arg},
       # Start to serve requests, typically the last entry
