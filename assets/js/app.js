@@ -20,7 +20,7 @@
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
-import {Socket} from "phoenix"
+import {Socket, Presence} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import {hooks as colocatedHooks} from "phoenix-colocated/socketything"
 import topbar from "../vendor/topbar"
@@ -96,6 +96,26 @@ presenceChannel
     .receive("ok", response => console.log("joined", response))
     .receive("error", response => console.log("failed to join", response))
     .receive("timeout", response => console.log("timed out"))
+
+const presence = new Presence(presenceChannel)
+
+presence.onJoin((viewerId, _current, newPresence) => {
+    console.log("Viewer joined", viewerId, newPresence)
+})
+
+presence.onLeave((viewerId, _current, leftPresence) => {
+    console.log("Viewer left", viewerId, leftPresence)
+})
+
+presence.onSync(() => {
+    const viewers = presence.list((viewerId, presenceData) => ({
+        viewerId,
+        metadata: presenceData.metas[0],
+    }))
+
+    console.log(`${viewers.length} viewer(s) online`, viewers)
+})
+
 
 window.presenceSocket = presenceSocket
 window.presenceChannel = presenceChannel
