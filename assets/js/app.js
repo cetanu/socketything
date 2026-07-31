@@ -81,3 +81,21 @@ if (process.env.NODE_ENV === "development") {
   })
 }
 
+
+const presenceSocket = new Socket("/socket")
+presenceSocket.onOpen(() => console.log("connected"))
+presenceSocket.onClose(() => console.log("disconnected"))
+presenceSocket.onError(() => console.log("error"))
+
+presenceSocket.connect()
+
+const presenceChannel = presenceSocket.channel("presence:test", {})
+
+presenceChannel
+    .join()
+    .receive("ok", response => console.log("joined", response))
+    .receive("error", response => console.log("failed to join", response))
+    .receive("timeout", response => console.log("timed out"))
+
+window.presenceSocket = presenceSocket
+window.presenceChannel = presenceChannel
