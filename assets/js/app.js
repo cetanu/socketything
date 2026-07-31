@@ -81,32 +81,70 @@ if (process.env.NODE_ENV === "development") {
   })
 }
 
+const cursorLayer = document.createElement("div")
+cursorLayer.id = "presence-cursor-layer"
+document.body.appendChild(cursorLayer)
+
+const remoteCursors = new Map()
+
+function getRemoteCursor(viewerId) {
+    let cursor = remoteCursors.get(viewerId)
+    if (!cursor) {
+        cursor = document.createElement("div")
+        cursor.className = "presence-cursor"
+        cursor.dataset.viewerId = viewerId
+        cursorLayer.appendChild(cursor)
+        remoteCursors.set(viewerId, cursor)
+    }
+    return cursor
+}
+
+function removeRemoteCursor(viewerId) {
+    const cursor = remoteCursors.get(viewerId)
+    if (cursor) {
+        cursor.remove()
+        remoteCursors.delete(viewerId)
+    }
+}
+
 
 const presenceSocket = new Socket("/socket")
 presenceSocket.onOpen(() => console.log("connected"))
 presenceSocket.onClose(() => console.log("disconnected"))
 presenceSocket.onError(() => console.log("error"))
-
 presenceSocket.connect()
 
-const presenceChannel = presenceSocket.channel("presence:test", {})
 
+let presenceJoined = false
+const presenceChannel = presenceSocket.channel("presence:test", {})
 presenceChannel
     .join()
-    .receive("ok", response => console.log("joined", response))
+    .receive("ok", response => {
+        presenceJoined = true
+        console.log("joined", response)
+    })
     .receive("error", response => console.log("failed to join", response))
     .receive("timeout", response => console.log("timed out"))
+presenceChannel.onClose(() => {
+    presenceJoined = false
+})
+presenceChannel.on("cursor", ({viewer_id: viewerId, x, y}) => {
+    const cursor = getRemoteCursor(viewerId)
+    cursor.style.left = `${x * 100}%`
+    cursor.style.top = `${y * 100}%`
+
+    console.log("remote cursor", cursor)
+})
+
 
 const presence = new Presence(presenceChannel)
-
 presence.onJoin((viewerId, _current, newPresence) => {
     console.log("Viewer joined", viewerId, newPresence)
 })
-
 presence.onLeave((viewerId, _current, leftPresence) => {
     console.log("Viewer left", viewerId, leftPresence)
+    removeRemoteCursor(viewerId)
 })
-
 presence.onSync(() => {
     const viewers = presence.list((viewerId, presenceData) => ({
         viewerId,
@@ -116,6 +154,22 @@ presence.onSync(() => {
     console.log(`${viewers.length} viewer(s) online`, viewers)
 })
 
+
+let lastCursorSentAt = 0
+window.addEventListener("pointermove", event => {
+    const now = performance.now()
+
+    if (!presenceJoined || now - lastCursorSentAt < 50) {
+        return
+    }
+
+    lastCursorSentAt = now
+
+    presenceChannel.push("cursor", {
+        x: event.clientX / window.innerWidth,
+        y: event.clientY / window.innerHeight,
+    })
+})
 
 window.presenceSocket = presenceSocket
 window.presenceChannel = presenceChannel

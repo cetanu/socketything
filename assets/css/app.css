@@ -103,3 +103,25 @@
 [data-phx-session], [data-phx-teleported-src] { display: contents }
 
 /* This file is for your main application CSS */
+
+#presence-cursor-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.presence-cursor {
+  position: absolute;
+  width: 0.875rem;
+  height: 0.875rem;
+  border: 2px solid white;
+  border-radius: 9999px;
+  background: #7c3aed;
+  box-shadow: 0 2px 8px rgb(15 23 42 / 35%);
+  transform: translate(-50%, -50%);
+  transition:
+    left 50ms linear,
+    top 50ms linear;
+}
