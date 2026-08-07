@@ -12,7 +12,7 @@ defmodule SocketythingWeb.Endpoint do
   ]
 
   socket "/socket", SocketythingWeb.UserSocket,
-    websocket: true,
+    websocket: [check_origin: ["https://vsyrakis.dev"]],
     longpoll: false
 
   socket "/live", Phoenix.LiveView.Socket,

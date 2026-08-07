@@ -1,7 +1,7 @@
 socketything:
   release_url: https://github.com/cetanu/socketything/releases/latest/download/socketything_linux_x86_64
   environment: |
-    PHX_HOST=deploy.vsyrakis.dev
+    PHX_HOST=presence.vsyrakis.dev
     PORT=4000
 
   key_base: |
