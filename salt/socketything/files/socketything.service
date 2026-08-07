@@ -1,0 +1,16 @@
+[Unit]
+Description=Socketything Phoenix application
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/apps/socketything/current
+ExecStart=/opt/apps/socketything/current/socketything
+Restart=always
+RestartSec=5s
+EnvironmentFile=/etc/socketything.env
+
+[Install]
+WantedBy=multi-user.target
