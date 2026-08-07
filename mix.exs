@@ -10,6 +10,7 @@ defmodule Socketything.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      releases: releases(),
       compilers: [:phoenix_live_view] ++ Mix.compilers(),
       listeners: [Phoenix.CodeReloader]
     ]
@@ -44,6 +45,7 @@ defmodule Socketything.MixProject do
       {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 1.2.0"},
+      {:burrito, "~> 1.5.0"},
       {:lazy_html, ">= 0.1.0", only: :test},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.5", runtime: Mix.env() == :dev},
@@ -72,6 +74,19 @@ defmodule Socketything.MixProject do
     ]
   end
 
+  defp releases do
+    [
+      socketything: [
+        steps: [:assemble, &Burrito.wrap/1],
+        burrito: [
+          targets: [
+            linux_x86_64: [os: :linux, cpu: :x86_64]
+          ]
+        ]
+      ]
+    ]
+  end
+
   # Aliases are shortcuts or tasks specific to the current project.
   # For example, to install project dependencies and perform other setup tasks, run:
   #
@@ -88,6 +103,7 @@ defmodule Socketything.MixProject do
         "esbuild socketything --minify",
         "phx.digest"
       ],
+      "burrito.build": ["compile", "assets.deploy", "release --overwrite"],
       precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
     ]
   end
