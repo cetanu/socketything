@@ -26,6 +26,14 @@ SECRET_KEY_BASE="$(mix phx.gen.secret)" PHX_HOST=localhost PORT=4000 \
   ./burrito_out/socketything_linux_x86_64
 ```
 
+Pushing a version tag builds the executable and publishes it with a checksum
+on the corresponding GitHub Release:
+
+```sh
+git tag v0.1.0
+git push origin v0.1.0
+```
+
 Ready to run in production? Please [check our deployment guides](https://phoenix.hexdocs.pm/deployment.html).
 
 ## Learn more
