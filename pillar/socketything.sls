@@ -1,3 +1,5 @@
+#!yaml|gpg
+
 socketything:
   release_url: https://github.com/cetanu/socketything/releases/latest/download/socketything_linux_x86_64
   environment: |
