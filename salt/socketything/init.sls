@@ -40,20 +40,6 @@ reload-systemd-for-socketything:
     - onchanges:
       - file: /etc/systemd/system/socketything.service
 
-/etc/caddy/apps/socketything.caddy:
-  file.managed:
-    - source: salt://socketything/files/socketything.caddy
-    - user: root
-    - group: root
-    - mode: '0644'
-
-caddy.service:
-  service.running:
-    - enable: true
-    - reload: true
-    - watch:
-      - file: /etc/caddy/apps/socketything.caddy
-
 socketything.service:
   service.running:
     - enable: true
@@ -66,7 +52,7 @@ socketything.service:
 
 verify-socketything-health:
   cmd.run:
-    - name: curl --fail --silent --show-error --retry 10 --retry-delay 1 http://127.0.0.1:4000/
+    - name: curl --fail --silent --show-error --retry 30 --retry-delay 1 --retry-connrefused http://127.0.0.1:4000/
     - onchanges:
       - file: /opt/apps/socketything/current/socketything
       - file: /etc/socketything.env
