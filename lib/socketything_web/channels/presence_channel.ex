@@ -1,5 +1,5 @@
 defmodule SocketythingWeb.PresenceChannel do
-  use SocketythingWeb, :channel
+  use Phoenix.Channel
 
   @impl true
   def join("presence:" <> page, _payload, socket) when page != "" do

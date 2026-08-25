@@ -1,18 +1,21 @@
-# Socketything
+# Socketything Presence
 
-To start your Phoenix server:
+Socketything is a small Phoenix Presence server. Clients connect to `/socket`,
+join a `presence:<page>` channel, and exchange normalized cursor coordinates.
 
-* Run `mix setup` to install and setup dependencies
-* Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+To run it locally:
 
-This application has no database layer. It does not require Ecto, PostgreSQL,
-`DATABASE_URL`, migrations, or database setup before the server starts.
+```sh
+mix setup
+mix phx.server
+```
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+`GET /` is a minimal deployment health check. There is no browser UI, LiveView,
+mailer, database, or static asset pipeline.
 
 ## Single-file Linux executable
 
-Install Zig 0.15.2, then build the production assets and Burrito executable:
+Install Zig 0.15.2, then build the Burrito executable:
 
 ```sh
 MIX_ENV=prod mix burrito.build
@@ -33,13 +36,3 @@ on the corresponding GitHub Release:
 git tag v0.1.0
 git push origin v0.1.0
 ```
-
-Ready to run in production? Please [check our deployment guides](https://phoenix.hexdocs.pm/deployment.html).
-
-## Learn more
-
-* Official website: https://www.phoenixframework.org/
-* Guides: https://phoenix.hexdocs.pm/overview.html
-* Docs: https://phoenix.hexdocs.pm
-* Forum: https://elixirforum.com/c/phoenix-forum
-* Source: https://github.com/phoenixframework/phoenix
