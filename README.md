@@ -36,3 +36,10 @@ on the corresponding GitHub Release:
 git tag v0.1.0
 git push origin v0.1.0
 ```
+
+## Host deployment
+
+`deploy/apply.py` installs the prebuilt release using shared helpers from
+`host-services`. Configuration lives in `deploy/config.yaml`. Invoke deployment
+through `sudo systemctl start deployment-reconcile.service`; `stream-infra` owns
+the serialized runner and its memory limits.
